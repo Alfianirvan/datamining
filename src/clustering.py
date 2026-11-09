@@ -1,5 +1,6 @@
 """K-means, elbow, silhouette, dan penamaan segmen."""
 import pandas as pd
+import streamlit as st
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.metrics import silhouette_score
@@ -15,6 +16,7 @@ def scale_features(df: pd.DataFrame, cols):
     return StandardScaler().fit_transform(df[cols])
 
 
+@st.cache_data(show_spinner="Menghitung elbow dan silhouette...")
 def elbow_table(Xs, seed: int, k_range=range(2, 11)) -> pd.DataFrame:
     """Inertia dan silhouette untuk tiap k."""
     rows = []
@@ -24,6 +26,7 @@ def elbow_table(Xs, seed: int, k_range=range(2, 11)) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+@st.cache_data(show_spinner=False)
 def fit_kmeans(Xs, k: int, seed: int):
     """Fit k-means final dan proyeksi PCA 2D."""
     km = KMeans(n_clusters=k, n_init=10, random_state=seed).fit(Xs)
